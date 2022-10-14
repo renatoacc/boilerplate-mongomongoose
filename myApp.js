@@ -64,10 +64,10 @@ const findPersonById = (personId, done) => {
 
 const findEditThenSave = (personId, done) => {
   const foodToAdd = "hamburger";
-  Person.findById({ _id: personId }, (error, data) => {
+  Person.findById({ _id: personId }, (error, updatePerson) => {
     if (error) return console.error(error)
-    data.favoriteFoods.push(foodToAdd);
-    data.save((error, data) => {
+    updatePerson.favoriteFoods.push(foodToAdd);
+    updatePerson.save((error, data) => {
       if (error) return console.error(error);
       done(null, data);
     })
@@ -76,8 +76,16 @@ const findEditThenSave = (personId, done) => {
 
 const findAndUpdate = (personName, done) => {
   const ageToSet = 20;
+  Person.findOneAndUpdate({ name: personName }, async (updatePerson) => {
+    try {
+      updatePerson.age = ageToSet;
+      await updatePerson.save(data)
+      done(null, data);
 
-  done(null /*, data*/);
+    } catch (error) {
+      return console.error(error)
+    }
+  })
 };
 
 const removeById = (personId, done) => {
